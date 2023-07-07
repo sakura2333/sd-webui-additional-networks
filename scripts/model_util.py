@@ -10,6 +10,7 @@ from multiprocessing.pool import ThreadPool as Pool
 
 from modules import shared, sd_models, hashes
 from scripts import safetensors_hack, model_util, util
+from scripts import info_reader
 import modules.scripts as scripts
 
 
@@ -38,7 +39,10 @@ def read_model_metadata(model_path, module):
     if module == "LoRA":
         if os.path.splitext(model_path)[1] == ".safetensors":
             metadata = safetensors_hack.read_metadata(model_path)
-
+            # 我的修改
+            if metadata is not None:
+                if not hasattr(metadata, "ssmd_keywords"):
+                    info_reader.read_metadata(model_path, metadata)
     return metadata
 
 
